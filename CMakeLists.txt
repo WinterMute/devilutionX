@@ -182,8 +182,7 @@ if(AMIGA)
   include(amiga_defs)
 endif()
 
-if(N3DS)
-  list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr")
+if(NINTENDO_3DS)
   include(n3ds_defs)
 endif()
 
@@ -206,7 +205,7 @@ if(NOT NOSOUND)
   endif()
 endif()
 
-if(NOT N3DS)
+if(NOT NINTENDO_3DS)
   find_package(Threads REQUIRED)
 endif()
 
@@ -477,13 +476,12 @@ if(VITA)
     Source/platform/vita/keyboard.cpp)
 endif()
 
-if(N3DS)
+if(NINTENDO_3DS)
   list(APPEND libdevilutionx_SRCS
     Source/platform/ctr/system.cpp
     Source/platform/ctr/keyboard.cpp
     Source/platform/ctr/display.cpp
     Source/platform/ctr/messagebox.cpp)
-  set(BIN_TARGET ${BIN_TARGET}.elf)
 endif()
 
 if(RUN_TESTS)
@@ -578,7 +576,7 @@ target_include_directories(libdevilutionx PUBLIC
   Source
   ${CMAKE_CURRENT_BINARY_DIR})
 
-if(NOT N3DS)
+if(NOT NINTENDO_3DS)
   target_link_libraries(libdevilutionx PUBLIC
   Threads::Threads)
 endif()
@@ -741,9 +739,14 @@ if (VITA)
   target_compile_definitions(libdevilutionx PUBLIC VITA)
 endif()
 
-if(N3DS)
-  target_link_libraries(libdevilutionx PUBLIC 3ds::freetype 3ds::bzip2 3ds::png)
-  target_link_libraries(libdevilutionx PUBLIC 3ds::citro3d 3ds::ctrulib)
+if(NINTENDO_3DS)
+  target_link_libraries(libdevilutionx PUBLIC
+    citro3d
+    freetype
+    png
+    bz2
+    z
+  )
 endif()
 
 target_compile_definitions(libdevilutionx PUBLIC ${def_list})
@@ -872,25 +875,25 @@ if(VITA)
   )
 endif()
 
-if(N3DS)
-  set(APP_TITLE       "DevilutionX")
-  set(APP_DESCRIPTION "DevilutionX port for 3DS")
-  set(APP_AUTHOR      "Diasurgical Team")
-  set(APP_ICON        "${PROJECT_SOURCE_DIR}/Packaging/ctr/icon.png")
-  set(APP_BANNER      "${PROJECT_SOURCE_DIR}/Packaging/ctr/banner.png")
-  set(APP_AUDIO       "${PROJECT_SOURCE_DIR}/Packaging/ctr/audio_silent.wav")
-  set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
-  set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
-  set(APP_ROMFS_FILES
-    "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
-    "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq")
-  file(MAKE_DIRECTORY ${APP_ROMFS})
-  file(COPY ${APP_ROMFS_FILES}
-     DESTINATION ${APP_ROMFS})
-  set(APP_VERSION ${PROJECT_VERSION})
-  include(Tools3DS)
-  add_3dsx_target(${BIN_TARGET})
-  add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO} ${APP_ROMFS})
+if(NINTENDO_3DS)
+#  set(APP_TITLE       "DevilutionX")
+#  set(APP_DESCRIPTION "DevilutionX port for 3DS")
+#  set(APP_AUTHOR      "Diasurgical Team")
+#  set(APP_ICON        "${PROJECT_SOURCE_DIR}/Packaging/ctr/icon.png")
+#  set(APP_BANNER      "${PROJECT_SOURCE_DIR}/Packaging/ctr/banner.png")
+#  set(APP_AUDIO       "${PROJECT_SOURCE_DIR}/Packaging/ctr/audio_silent.wav")
+#  set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
+#  set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
+#  set(APP_ROMFS_FILES
+#    "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
+#    "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq")
+#  file(MAKE_DIRECTORY ${APP_ROMFS})
+#  file(COPY ${APP_ROMFS_FILES}
+#     DESTINATION ${APP_ROMFS})
+#  set(APP_VERSION ${PROJECT_VERSION})
+#  include(Tools3DS)
+#  add_3dsx_target(${BIN_TARGET})
+#  add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO} ${APP_ROMFS})
 endif()
 
 if(CPACK)
